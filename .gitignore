@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# dados
+*.zip
+cittamobi_gtfs/
+
 # Distribution / packaging
 .Python
 build/
