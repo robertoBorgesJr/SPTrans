@@ -10,8 +10,10 @@ __pycache__/
 *.zip
 cittamobi_gtfs/
 
-# pyspark package
+# miscelaneous
 typings/
+.databricks/
+.vscode/
 
 # Distribution / packaging
 .Python
