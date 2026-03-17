@@ -10,6 +10,9 @@ __pycache__/
 *.zip
 cittamobi_gtfs/
 
+# pyspark package
+typings/
+
 # Distribution / packaging
 .Python
 build/
