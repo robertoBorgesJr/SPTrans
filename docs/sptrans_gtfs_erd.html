@@ -1,0 +1,164 @@
+
+<style>
+#erd { padding: 0.5rem 0; }
+#erd svg { width: 100%; }
+#erd svg.erDiagram .divider path { stroke-opacity: 0.5; }
+#erd svg.erDiagram .row-rect-odd path,
+#erd svg.erDiagram .row-rect-odd rect,
+#erd svg.erDiagram .row-rect-even path,
+#erd svg.erDiagram .row-rect-even rect { stroke: none !important; }
+</style>
+<div id="erd"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '13px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    primaryColor: dark ? '#2a2a48' : '#EEEDFE',
+    primaryBorderColor: dark ? '#534AB7' : '#AFA9EC',
+    primaryTextColor: dark ? '#c2c0b6' : '#26215C',
+    secondaryColor: dark ? '#0f3028' : '#E1F5EE',
+    secondaryBorderColor: dark ? '#0F6E56' : '#5DCAA5',
+    secondaryTextColor: dark ? '#9FE1CB' : '#04342C',
+    tertiaryColor: dark ? '#3d2010' : '#FAEEDA',
+    tertiaryBorderColor: dark ? '#854F0B' : '#EF9F27',
+    tertiaryTextColor: dark ? '#FAC775' : '#412402',
+  },
+});
+
+const diagram = `erDiagram
+  agency {
+    string agency_id PK
+    string agency_name
+    string agency_url
+    string agency_timezone
+    string agency_lang
+  }
+
+  calendar {
+    string service_id PK
+    int monday
+    int tuesday
+    int wednesday
+    int thursday
+    int friday
+    int saturday
+    int sunday
+    string start_date
+    string end_date
+  }
+
+  routes {
+    string route_id PK
+    string agency_id FK
+    string route_short_name
+    string route_long_name
+    int route_type
+    string route_color
+    string route_text_color
+  }
+
+  trips {
+    string trip_id PK
+    string route_id FK
+    string service_id FK
+    string trip_headsign
+    int direction_id
+    string shape_id FK
+  }
+
+  stops {
+    string stop_id PK
+    string stop_name
+    string stop_desc
+    float stop_lat
+    float stop_lon
+  }
+
+  stop_times {
+    string trip_id FK
+    string stop_id FK
+    string arrival_time
+    string departure_time
+    int stop_sequence
+  }
+
+  shapes {
+    string shape_id PK
+    float shape_pt_lat
+    float shape_pt_lon
+    int shape_pt_sequence
+    float shape_dist_traveled
+  }
+
+  frequencies {
+    string trip_id FK
+    string start_time
+    string end_time
+    int headway_secs
+  }
+
+  fare_attributes {
+    string fare_id PK
+    float price
+    string currency_type
+    int payment_method
+    string transfers
+    int transfer_duration
+  }
+
+  fare_rules {
+    string fare_id FK
+    string route_id FK
+    string origin_id
+    string destination_id
+    string contains_id
+  }
+
+  agency ||--o{ routes : "opera"
+  routes ||--o{ trips : "possui"
+  calendar ||--o{ trips : "define servico"
+  trips ||--o{ stop_times : "para em"
+  stops ||--o{ stop_times : "recebe"
+  trips ||--o{ frequencies : "tem frequencia"
+  shapes ||--o{ trips : "traca rota"
+  fare_attributes ||--o{ fare_rules : "aplica tarifa"
+  routes ||--o{ fare_rules : "sujeito a"
+`;
+
+const { svg } = await mermaid.render('erd-svg', diagram);
+document.getElementById('erd').innerHTML = svg;
+
+document.querySelectorAll('#erd svg.erDiagram .node').forEach(node => {
+  const firstPath = node.querySelector('path[d]');
+  if (!firstPath) return;
+  const d = firstPath.getAttribute('d');
+  const nums = d.match(/-?[\d.]+/g)?.map(Number);
+  if (!nums || nums.length < 8) return;
+  const xs = [nums[0], nums[2], nums[4], nums[6]];
+  const ys = [nums[1], nums[3], nums[5], nums[7]];
+  const x = Math.min(...xs), y = Math.min(...ys);
+  const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rect.setAttribute('x', x); rect.setAttribute('y', y);
+  rect.setAttribute('width', w); rect.setAttribute('height', h);
+  rect.setAttribute('rx', '8');
+  for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+    if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+  }
+  firstPath.replaceWith(rect);
+});
+
+document.querySelectorAll('#erd svg.erDiagram .row-rect-odd path, #erd svg.erDiagram .row-rect-even path').forEach(p => {
+  p.setAttribute('stroke', 'none');
+});
+</script>
