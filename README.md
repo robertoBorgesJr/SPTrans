@@ -57,5 +57,8 @@ Utilizamos o framework de testes do **dbt** para garantir a integridade do pipel
   dbt docs generate
   dbt docs serve     
 
+![Gráfico de Linhagem do dbt](img/dbt-lineage.png)
+
+
 ---
 Desenvolvido por Roberto Elias Borges Jr - Foco em Data Science e Engenharia de Dados  
