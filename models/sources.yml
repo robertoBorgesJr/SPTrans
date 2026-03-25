@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: sptrans_raw  # Nome interno da fonte
+    catalog: sptrans_catalog
+    schema: gtfs_data  # O schema onde o Spark salvou as tabelas
+    tables:
+      - name: silver_stop_times
+      - name: silver_stops
+      - name: silver_trips
+      - name: silver_frequencies
+      - name: silver_routes
+      - name: silver_fare_rules
+      - name: silver_fare_attributes
+      - name: silver_calendar

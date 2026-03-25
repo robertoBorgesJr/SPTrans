@@ -1,0 +1,32 @@
+name: 'sptrans_project'
+version: '1.0.0'
+config-version: 2
+profile: 'sptrans_project'
+
+# Onde o dbt vai procurar cada tipo de arquivo
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Configuração de como os modelos serão criados no Databricks
+models:
+  sptrans_project:
+    # Por padrão, tudo na pasta 'models' vira uma VIEW no Databricks
+    +materialized: view
+    
+    # Configurações específicas por pasta
+    silver:
+      +materialized: table # Opcional: se quiser que a silver seja tabela física
+    
+    gold:
+      tabelas_finais:
+        +materialized: marts
+      views_analiticas:
+        +materialized: views

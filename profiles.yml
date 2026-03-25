@@ -1,0 +1,11 @@
+sptrans_project:
+  outputs:
+    dev:
+      type: databricks
+      schema: gtfs_data
+      host: "{{ env_var('DBT_HOST') }}" 
+      http_path: "{{ env_var('DBT_HTTP_PATH') }}"
+      token: "{{ env_var('DBT_TOKEN') }}"      
+      catalog: sptrans_catalog
+      threads: 4
+  target: dev

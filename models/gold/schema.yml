@@ -1,0 +1,15 @@
+# models/gold/schema.yml
+version: 2
+
+models:
+  - name: vw_tempo_viagem_por_parada
+    description: "View consolidada para análise de performance de tempo entre paradas do GTFS."
+    columns:
+      - name: trip_id
+        description: "ID único da viagem."
+        tests:
+          - not_null 
+      - name: arrival_time_sec
+        description: "Tempo de chegada convertido em segundos para cálculos."
+        tests:
+          - not_null
