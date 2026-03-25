@@ -1,0 +1,56 @@
+semantic_models:
+  - name: sm_frequencia_linhas
+    model: ref('gold_frequencia_por_linha')
+    entities:
+      - name: linha_id
+        type: primary
+    dimensions:
+      - name: periodo_dia
+        type: categorical
+      - name: data_processamento
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: total_viagens
+        agg: sum
+        expr: qtd_viagens
+      - name: headway_acumulado
+        agg: sum
+        expr: headway_medio_min
+
+metrics:
+  - name: media_headway_global
+    description: "Intervalo médio entre ônibus em minutos"
+    label: "Headway Médio (Min)"
+    type: simple
+    type_params:
+      measure: headway_acumulado
+
+  - name: media_headway_7_dias
+    description: "Média móvel de 7 dias do intervalo entre autocarros para suavizar sazonalidade."
+    label: "Headway Médio (7d)"
+    type: cumulative
+    type_params:
+      measure: headway_acumulado 
+      window: 7 days # Define a janela de tempo          
+
+saved_queries:
+  - name: dashboard_operacional_sptrans
+    description: "Visão consolidada para o dashboard de performance da frota"
+    query: |
+      select
+        periodo_dia,
+        media_headway_global,
+        total_viagens
+      from {{ metrics('media_headway_global') }}    
+
+  - name: analise_tendencia_sptrans
+    description: "Comparação entre headway diário e tendência de 7 dias"
+    query: |
+      select
+        data_processamento,
+        periodo_dia,
+        media_headway_global,
+        media_headway_7_dias
+      from {{ metrics('media_headway_global', 'media_headway_7_dias') }}      
