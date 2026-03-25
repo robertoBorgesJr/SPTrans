@@ -1,0 +1,40 @@
+name: dbt_ci_pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  dbt-test:
+    runs-on: ubuntu-latest
+
+    env:
+      # Mapeia os segredos do GitHub para variáveis de ambiente
+      DBT_HOST: ${{ secrets.DBT_HOST }}
+      DBT_HTTP_PATH: ${{ secrets.DBT_HTTP_PATH }}
+      DBT_TOKEN: ${{ secrets.DBT_TOKEN }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install dbt-databricks
+
+      - name: Install dbt packages
+        run: dbt deps --profiles-dir .
+
+      - name: dbt Debug (Check Connection)
+        run: dbt debug --profiles-dir .
+
+      - name: dbt Build (Run + Test)
+        run: dbt build --profiles-dir .
