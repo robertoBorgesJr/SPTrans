@@ -5,31 +5,33 @@
 Este projeto implementa um pipeline de dados moderno para processar e analisar dados de transporte público (GTFS) da SPTrans. O objetivo é transformar dados brutos em insights operacionais sobre a frequência de linhas e a densidade de paradas na cidade de São Paulo.
 
 ## 🛠️ Stack Tecnológica
-
-- **Cloud:** Databricks 
+- **Cloud:** Databricks (Lakehouse Architecture)
 - **Linguagens:** SQL, Python (PySpark)
 - **Transformação:** dbt-core (v1.11.6)
+- **Orquestração de Metadados:** dbt Semantic Layer (Metrics & Saved Queries)
 - **Gerenciamento de Pacotes:** `uv` (Fast Python package installer)
-- **Armazenamento:** Delta Lake (Medallion Architecture)
+- **CI/CD:** GitHub Actions
 
 ## 🏗️ Arquitetura de Dados (Medallion)
 
 O projeto segue a arquitetura de medalhão para garantir qualidade e linhagem:
 
-1.  **Bronze:** Dados brutos do GTFS carregados no Databricks.
-2.  **Silver (Spark):** Limpeza, padronização de horários e deduplicação via PySpark (Notebook).
-3.  **Gold (dbt):** Modelagem de negócios e agregações analíticas (Marts e Views).
+1.  **Bronze:** Ingestão de dados brutos do GTFS no Delta Lake.
+2.  **Silver (Spark Streaming):** Limpeza, padronização de tipos e deduplicação via PySpark. Utiliza `writeStream` com `trigger(availableNow=True)` para processamento eficiente.
+3.  **Gold (dbt):** Modelagem dimensional, agregações de negócio e camada semântica.
 
-## 📊 Modelos Gold Principais
+## 📊 Inteligência de Dados & Camada Semântica
 
-- **Frequência por Linha:** Cálculo de headway (intervalo médio) segmentado por período do dia.
-- **Paradas mais Atendidas:** Ranking de hubs de transporte com base no volume de viagens e diversidade de linhas.
+Diferente de pipelines tradicionais, este projeto utiliza a **dbt Semantic Layer** para garantir uma "Fonte Única da Verdade" (Single Source of Truth):
 
-## 🚦 Qualidade e Testes
+- **Métricas Governas:** Definição centralizada de `media_headway_global` e `total_viagens`.
+- **Análise de Tendência:** Implementação de **Média Móvel de 7 dias** (`media_headway_7_dias`) para suavizar a sazonalidade dos dados de transporte.
+- **Saved Queries:** Consultas pré-configuradas para consumo imediato por ferramentas de BI (Power BI/Looker).
 
-Utilizamos o framework de testes do **dbt** para garantir a integridade do pipeline:
-- **Testes Genéricos:** `not_null`, `unique`, `accepted_values`.
-- **Testes de Negócio:** Validação de intervalos de tempo (headway positivo) e consistência lógica entre paradas.
+## 🚦 Qualidade e Automação (CI/CD)
+
+- **Testes de Dados:** Validação automática de chaves únicas, campos não nulos e regras de negócio (ex: intervalos de tempo positivos).
+- **GitHub Actions:** Pipeline automatizado que executa `dbt build` a cada commit, garantindo que apenas códigos validados cheguem à branch principal.
 
 ## 🚀 Como Executar
 
