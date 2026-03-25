@@ -1,3 +1,5 @@
+[![dbt_ci_pipeline](https://github.com/robertoBorgesJr/SPTrans/actions/workflows/dbt_ci.yml/badge.svg)](https://github.com/robertoBorgesJr/SPTrans/actions/workflows/dbt_ci.yml)
+
 # 🚌 SPTrans GTFS Data Pipeline (Databricks + dbt)
 
 Este projeto implementa um pipeline de dados moderno para processar e analisar dados de transporte público (GTFS) da SPTrans. O objetivo é transformar dados brutos em insights operacionais sobre a frequência de linhas e a densidade de paradas na cidade de São Paulo.
