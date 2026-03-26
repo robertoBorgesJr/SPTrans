@@ -13,3 +13,13 @@ sources:
       - name: silver_fare_rules
       - name: silver_fare_attributes
       - name: silver_calendar
+
+  - name: sptrans_production
+    database: sptrans_catalog
+    schema: gtfs_data
+    tables:
+      - name: tbl_viagens_silver
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: data_processamento # campo de timestamp       
