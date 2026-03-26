@@ -1,14 +1,21 @@
 # Script para auditoria de dados na camada Bronze
+
+%run "../utils/config"
+
 from utils.data_quality import validar_ingestao_bronze
+import datetime
+from pyspark.sql import functions as F
 
 results = []
-
-catalog = "sptrans_catalog"
-schema = "gtfs_data"
 
 print("\n" + "="*40)
 print("RELATÓRIO DE RECONCILIAÇÃO (BRONZE)")
 print("="*40)
+
+dbutils.widgets.text("data_processamento", datetime.datetime.now().strftime("%Y-%m-%d"))
+data_alvo = dbutils.widgets.get("data_processamento")
+
+path_today = f"{volume_path}{data_alvo}/"
 
 for file in gtfs_files:
     
