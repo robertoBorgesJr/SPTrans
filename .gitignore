@@ -1,35 +1,17 @@
-# === dbt (Essencial) ===
-target/              # Compilados e resultados de execução 
-dbt_packages/        # Pacotes externos (instalados via dbt deps) 
-logs/                # Logs de erro e execução do dbt 
-dbt_modules/         # Versões antigas do dbt_packages 
-
-# === Python & Ambientes Virtuais ===
-.venv/               # O seu ambiente isolado (uv/python) 
-venv/                # Outras nomenclaturas de ambiente 
-__pycache__/         # Arquivos compilados do Python 
-*.py[cod]            # Byte-code do Python 
-.env                 # Variáveis de ambiente e segredos (MUITO IMPORTANTE) 
-
-# === Gerenciadores de Pacotes (Recomendação para uv) ===
-# No dbt/uv, geralmente mantemos o lock para reprodutibilidade,
-# mas se você preferir não trackear, descomente abaixo:
-# uv.lock [cite: 6, 7]
-
-# === IDE & Sistema (VS Code) ===
-.vscode/             # Configurações pessoais do editor 
-.databricks/         # Configurações locais do Databricks 
-.DS_Store            # Arquivos do sistema (Mac)
-Thumbs.db            # Arquivos do sistema (Windows) 
-
-# === Databricks / Jupyter Notebooks ===
-*.ipynb_checkpoints  # Checkpoints automáticos de notebooks 
-
-# === Dados & Temporários ===
-*.zip                # Arquivos compactados de dados 
+.env
+*.zip
+*.csv
+*.json
+*.log
+*.tmp
 *.txt
-*.csv                # Dados tabulares 
-*.json               # Dados estruturados
-*.tmp                # Arquivos temporários
-*.log                # Logs de execução e erros
-cittamobi_gtfs/      # Pasta local de dados GTFS
+__pycache__/
+.venv/
+.vscode/
+.databricks/
+target/
+dbt_packages/
+logs/
+.ipynb_checkpoints/
+cittamobi_gtfs/
+dbt_modules/
