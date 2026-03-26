@@ -27,4 +27,9 @@ Thumbs.db            # Arquivos do sistema (Windows)
 
 # === Dados & Temporários ===
 *.zip                # Arquivos compactados de dados 
+*.txt
+*.csv                # Dados tabulares 
+*.json               # Dados estruturados
+*.tmp                # Arquivos temporários
+*.log                # Logs de execução e erros
 cittamobi_gtfs/      # Pasta local de dados GTFS
