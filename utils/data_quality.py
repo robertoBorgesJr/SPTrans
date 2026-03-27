@@ -2,10 +2,12 @@ def validar_ingestao_bronze(file_name, catalog, schema, current_path):
     # Compara o arquivo físico na landing_zone com a tabela Delta.    
 
     target_table = f"{catalog}.{schema}.bronze_{file_name}"
+    print(f"Validando {target_table}")
 
     try:
         # 1. Lê o arquivo bruto da pasta identificada (CSV/TXT)
         file_path = f"{current_path}{file_name}.txt"
+        print(f"file_path={file_path}")        
         raw_df = spark.read.option("header", "true").csv(file_path)
         raw_count = raw_df.count()
         
